@@ -1,7 +1,17 @@
 ﻿@page "/"
+@inject NavigationManager Navigation
 
-<PageTitle>My Lego Collection</PageTitle>
+<PageTitle>My LEGO Collection</PageTitle>
 
-<h1>My Lego Collection</h1>
+<h1>My LEGO Collection</h1>
 
 Welcome to your new app.
+
+<button class="btn btn-primary" @onclick="GoToLegoSets">Check LEGO collection ></button>
+
+@code {
+    private void GoToLegoSets()
+    {
+        Navigation.NavigateTo("/lego-sets");
+    }
+}

@@ -1,0 +1,35 @@
+@page "/lego-sets"
+@inject RebrickableService RebrickableService
+
+<h3>My LEGO Collection</h3>
+
+@if (sets == null)
+{
+    <p>Loading sets...</p>
+}
+else if (!sets.Any())
+{
+    <p>Sets not found.</p>
+}
+else
+{
+    <ul>
+        @foreach (var set in sets)
+        {
+            <li>
+                <strong>@set.name</strong> (@set.year) - @set.num_parts pieces
+                <br />
+                <img src="@set.set_img_url" alt="@set.name" width="100" />
+            </li>
+        }
+    </ul>
+}
+
+@code {
+    private List<LegoSet> sets;
+
+    protected override async Task OnInitializedAsync()
+    {
+        sets = await RebrickableService.GetSetsAsync();
+    }
+}

@@ -2,54 +2,61 @@ using System.Net.Http;
 using System.Net.Http.Json;
 using System.Text.Json;
 using System.Threading.Tasks;
-
-public class LegoSet
-{
-    public string set_num { get; set; }
-    public string name { get; set; }
-    public int year { get; set; }
-    public int num_parts { get; set; }
-    public string set_img_url { get; set; }
-}
-
-public class LegoSetResponse
-{
-    public List<LegoSet> results { get; set; }
-}
+using MyLegoCollection.Models;
 
 public class RebrickableService
 {
     private readonly HttpClient _httpClient;
-    private readonly string _apiKey = "de835dfe59784d5b5bcf67850a3e544e";
+    private readonly string _apiKey;
 
-    public RebrickableService(HttpClient httpClient)
+    public RebrickableService(HttpClient httpClient, string apiKey)
     {
         _httpClient = httpClient;
+        _apiKey = apiKey;
     }
 
     public async Task<List<LegoSet>> GetSetsAsync()
     {
-        var response = await _httpClient.GetAsync($"https://rebrickable.com/api/v3/lego/sets/?key={_apiKey}");
-        
-        if (!response.IsSuccessStatusCode)
-        {
-            Console.WriteLine($"API error : {response.StatusCode} - {await response.Content.ReadAsStringAsync()}");
-            return new List<LegoSet>();
-        }
-
-        var json = await response.Content.ReadAsStringAsync();
-
-        // Log pour voir la réponse brute
-        Console.WriteLine($"API response : {json}");
-
         try
         {
-            var legoResponse = JsonSerializer.Deserialize<LegoSetResponse>(json, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
-            return legoResponse?.results ?? new List<LegoSet>();
+            var response = await _httpClient.GetAsync($"https://rebrickable.com/api/v3/lego/sets/?key={_apiKey}");
+
+            if (!response.IsSuccessStatusCode)
+            {
+                Console.WriteLine($"API error : {response.StatusCode}");
+                return new List<LegoSet>();
+            }
+
+            var legoResponse = await response.Content.ReadFromJsonAsync<LegoSetResponse>();
+
+            return legoResponse?.Results ?? new List<LegoSet>();
         }
-        catch (JsonException ex)
+        catch (Exception ex)
         {
-            Console.WriteLine($"JSON parsing error : {ex.Message}");
+            Console.WriteLine($"Error fetching sets: {ex.Message}");
+            return new List<LegoSet>();
+        }
+    }
+    
+    public async Task<List<LegoSet>> SearchSetsAsync(string query)
+    {
+        try
+        {
+            var response = await _httpClient.GetAsync($"https://rebrickable.com/api/v3/lego/sets/?search={query}&key={_apiKey}");
+
+            if (!response.IsSuccessStatusCode)
+            {
+                Console.WriteLine($"API error : {response.StatusCode}");
+                return new List<LegoSet>();
+            }
+
+            var legoResponse = await response.Content.ReadFromJsonAsync<LegoSetResponse>();
+
+            return legoResponse?.Results ?? new List<LegoSet>();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error searching sets: {ex.Message}");
             return new List<LegoSet>();
         }
     }

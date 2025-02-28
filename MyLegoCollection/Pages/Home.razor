@@ -3,15 +3,30 @@
 
 <PageTitle>My LEGO Collection</PageTitle>
 
-<h1>My LEGO Collection</h1>
+<h1>Welcome to My LEGO Collection</h1>
 
-Welcome to your new app.
+<h4>What you can do with this service:</h4>
 
-<button class="btn btn-primary" @onclick="GoToLegoSets">Check LEGO collection ></button>
+<br/>
+<p>Discover new LEGO sets</p>
+<button class="btn btn-primary" @onclick="GoToLegoSets">Discover</button><br/>
+
+<br/>
+<p>Search for LEGO sets</p>
+<button class="btn btn-primary" @onclick="GoToSearch">Search</button><br/>
+
+<br/>
+<p>Create my LEGO collection</p>
+<span>We're still working on this function...</span><br/>
 
 @code {
     private void GoToLegoSets()
     {
         Navigation.NavigateTo("/lego-sets");
+    }
+    
+    private void GoToSearch()
+    {
+        Navigation.NavigateTo("/search");
     }
 }

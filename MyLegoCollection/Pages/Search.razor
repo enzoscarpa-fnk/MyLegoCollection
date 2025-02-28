@@ -1,8 +1,11 @@
-@page "/lego-sets"
+@page "/search"
 @using MyLegoCollection.Models
 @inject RebrickableService RebrickableService
 
-<h3>My LEGO Collection</h3>
+<h3>Search LEGO sets</h3>
+
+<input @bind="searchQuery" placeholder="Search for a LEGO set..." />
+<button @onclick="SearchSets">Search</button>
 
 @if (sets == null)
 {
@@ -28,9 +31,18 @@ else
 
 @code {
     private List<LegoSet> sets;
+    private string searchQuery = "";
 
     protected override async Task OnInitializedAsync()
     {
         sets = await RebrickableService.GetSetsAsync();
+    }
+
+    private async Task SearchSets()
+    {
+        if (!string.IsNullOrWhiteSpace(searchQuery))
+        {
+            sets = await RebrickableService.SearchSetsAsync(searchQuery);
+        }
     }
 }

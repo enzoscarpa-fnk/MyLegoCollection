@@ -10,9 +10,8 @@
 <div>
     <label for="collectionName">Collection Name: </label>
     <input @bind="collectionName" @oninput="UpdateCollectionName" @onkeydown="HandleKeyDown" placeholder="Enter collection name" />
+    <button class="btn btn-primary" @onclick="CreateNewCollection">Create</button><br/>
 </div>
-
-<button class="btn btn-primary" @onclick="CreateNewCollection">Create</button><br/>
 
 <!-- Display a success message when a collection is created -->
 @if (!string.IsNullOrEmpty(successMessage))
@@ -34,15 +33,16 @@
         {
             // Add a new collection using the CollectionService
             await CollectionService.AddCollection(new LegoCollection { Name = collectionName, Sets = new List<LegoSet>() });
-
-            // Display success message
-            successMessage = $"Collection '{collectionName}' created!";
             
-            // Reset the input field
-            collectionName = "";
+            successMessage = $"Collection named '{collectionName}' has been created!"; // Display success message
+            collectionName = ""; // Reset the input field
             
             // Notify the parent component that a new collection has been created
             await OnCollectionCreated.InvokeAsync();
+            
+            // Triggering automatic message reset after 3 seconds
+            await Task.Delay(3000);  // 3 seconds delay
+            successMessage = ""; // Reset success message
         }
     }
     

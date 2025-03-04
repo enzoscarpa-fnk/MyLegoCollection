@@ -9,7 +9,7 @@
 <!-- Input field for entering the collection name -->
 <div>
     <label for="collectionName">Collection Name: </label>
-    <input @bind="collectionName" placeholder="Enter collection name" />
+    <input @bind="collectionName" @oninput="UpdateCollectionName" @onkeydown="HandleKeyDown" placeholder="Enter collection name" />
 </div>
 
 <button class="btn btn-primary" @onclick="CreateNewCollection">Create</button><br/>
@@ -43,6 +43,21 @@
             
             // Notify the parent component that a new collection has been created
             await OnCollectionCreated.InvokeAsync();
+        }
+    }
+    
+    // Updates the collection name when the user types
+    private void UpdateCollectionName(ChangeEventArgs e)
+    {
+        collectionName = e.Value?.ToString() ?? "";
+    }
+    
+    // Triggers creation when the Enter key is pressed
+    private async Task HandleKeyDown(KeyboardEventArgs e)
+    {
+        if (e.Key == "Enter")
+        {
+            await CreateNewCollection();
         }
     }
 }

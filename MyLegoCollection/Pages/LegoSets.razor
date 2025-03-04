@@ -2,6 +2,8 @@
 @using MyLegoCollection.Models
 @inject RebrickableService RebrickableService
 
+<PageTitle>Sets - My LEGO Collection</PageTitle>
+
 <h3>My LEGO Collection</h3>
 
 @if (sets == null)
@@ -29,8 +31,9 @@ else
 @code {
     private List<LegoSet> sets;
 
+    // Called when the component initializes
     protected override async Task OnInitializedAsync()
     {
-        sets = await RebrickableService.GetSetsAsync();
+        sets = await RebrickableService.GetSetsAsync(); // Load LEGO sets from the API
     }
 }

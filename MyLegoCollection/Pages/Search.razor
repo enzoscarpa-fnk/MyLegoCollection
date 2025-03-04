@@ -2,8 +2,11 @@
 @using MyLegoCollection.Models
 @inject RebrickableService RebrickableService
 
+<PageTitle>Search - My LEGO Collection</PageTitle>
+
 <h3>Search LEGO sets</h3>
 
+<!-- Input field for the search query -->
 <input @bind="searchQuery" @oninput="UpdateSearchQuery" @onkeydown="HandleKeyDown" placeholder="Search for a LEGO set..." />
 <button @onclick="SearchSets">Search</button>
 
@@ -30,14 +33,15 @@ else
 }
 
 @code {
-    private List<LegoSet> sets;
-    private string searchQuery = "";
+    private List<LegoSet> sets; // List to store LEGO sets
+    private string searchQuery = ""; // Stores the user's search input
 
     protected override async Task OnInitializedAsync()
     {
-        sets = await RebrickableService.GetSetsAsync();
+        sets = await RebrickableService.GetSetsAsync(); // Load initial sets from the API
     }
 
+    // Performs a search based on the user's query
     private async Task SearchSets()
     {
         if (!string.IsNullOrWhiteSpace(searchQuery))
@@ -46,11 +50,13 @@ else
         }
     }
 
+    // Updates the search query when the user types
     private void UpdateSearchQuery(ChangeEventArgs e)
     {
         searchQuery = e.Value?.ToString() ?? "";
     }
 
+    // Triggers search when the Enter key is pressed
     private async Task HandleKeyDown(KeyboardEventArgs e)
     {
         if (e.Key == "Enter")

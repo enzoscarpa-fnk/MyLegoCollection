@@ -1,0 +1,41 @@
+@page "/collections"
+@using MyLegoCollection.Models
+@inject CollectionService CollectionService
+
+<PageTitle>Collections - My LEGO Collection</PageTitle>
+
+<h3>My collections</h3>
+
+<!-- Include the component for creating a new collection -->
+<!-- When a new collection is created, it triggers the LoadCollections method -->
+<CreateCollection OnCollectionCreated="LoadCollections" />
+
+@if (CollectionService.Collections.Count == 0)
+{
+    <p>No collections yet. Try to create your first collection !</p>
+}
+else
+{
+    <ul>
+        @foreach (var collection in CollectionService.Collections)
+        {
+            <li>@collection.Name (@collection.Sets.Count sets)</li>
+        }
+    </ul>
+}
+
+@code {
+    // Called when the component is initialized
+    protected override async Task OnInitializedAsync()
+    {
+        await CollectionService.LoadCollectionsAsync(); // Load existing collections from LocalStorage
+    }
+
+    // Reloads the collections and updates the UI
+    private async Task LoadCollections()
+    {
+        await CollectionService.LoadCollectionsAsync(); // Refresh the collections list
+
+        StateHasChanged(); // Force UI update to reflect changes
+    }
+}

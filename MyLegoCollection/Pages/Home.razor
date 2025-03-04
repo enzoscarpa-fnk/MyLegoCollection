@@ -16,8 +16,8 @@
 <button class="btn btn-primary" @onclick="GoToSearch">Search</button><br/>
 
 <br/>
-<p>Create my LEGO collection</p>
-<span>We're still working on this function...</span><br/>
+<p>Manage my LEGO collection</p>
+<button class="btn btn-primary" @onclick="GoToCollection">Search</button><br/>
 
 @code {
     private void GoToLegoSets()
@@ -28,5 +28,10 @@
     private void GoToSearch()
     {
         Navigation.NavigateTo("/search");
+    }
+    
+    private void GoToCollection()
+    {
+        Navigation.NavigateTo("/collections");
     }
 }

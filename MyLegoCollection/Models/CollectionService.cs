@@ -2,48 +2,57 @@ using Blazored.LocalStorage;
 using System.Text.Json;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using MyLegoCollection.Models;
 
-public class CollectionService
+namespace MyLegoCollection.Models
 {
-    private readonly ILocalStorageService _localStorage;
-    public List<LegoCollection> Collections { get; private set; } = new();
-
-    // Constructor injecting the local storage service
-    public CollectionService(ILocalStorageService localStorage)
+    public class CollectionService
     {
-        _localStorage = localStorage;
-    }
+        private readonly ILocalStorageService _localStorage;
+        public List<LegoCollection> Collections { get; private set; } = new();
 
-    // Loads collections from local storage
-    public async Task LoadCollectionsAsync()
-    {
-        var json = await _localStorage.GetItemAsStringAsync("collections");
-        
-        // If data exists, deserialize it into a list of collections
-        if (!string.IsNullOrEmpty(json))
+        // Constructor injecting the local storage service
+        public CollectionService(ILocalStorageService localStorage)
         {
-            Collections = JsonSerializer.Deserialize<List<LegoCollection>>(json) ?? new List<LegoCollection>();
+            _localStorage = localStorage;
         }
-    }
 
-    // Saves the current collections list to local storage
-    public async Task SaveCollectionsAsync()
-    {
-        var json = JsonSerializer.Serialize(Collections);
-        await _localStorage.SetItemAsStringAsync("collections", json);
-    }
+        // Loads collections from local storage
+        public async Task LoadCollectionsAsync()
+        {
+            var json = await _localStorage.GetItemAsStringAsync("collections");
+        
+            // If data exists, deserialize it into a list of collections
+            if (!string.IsNullOrEmpty(json))
+            {
+                Collections = JsonSerializer.Deserialize<List<LegoCollection>>(json) ?? new List<LegoCollection>();
+            }
+        }
 
-    // Returns the current list of collections
-    public List<LegoCollection> GetCollections()
-    {
-        return Collections;
-    }
+        // Saves the current collections list to local storage
+        public async Task SaveCollectionsAsync()
+        {
+            var json = JsonSerializer.Serialize(Collections);
+            await _localStorage.SetItemAsStringAsync("collections", json);
+        }
 
-    // Adds a new collection to the list and saves it to local storage
-    public async Task AddCollection(LegoCollection newCollection)
-    {
-        Collections.Add(newCollection);
-        await SaveCollectionsAsync();
+        // Returns the current list of collections
+        public List<LegoCollection> GetCollections()
+        {
+            return Collections;
+        }
+
+        // Adds a new collection to the list and saves it to local storage
+        public async Task AddCollection(LegoCollection newCollection)
+        {
+            Collections.Add(newCollection);
+            await SaveCollectionsAsync();
+        }
+        
+        // Adds a new collection to the list and saves it to local storage
+        public async Task DeleteCollection(LegoCollection collectionToDelete)
+        {
+            Collections.Remove(collectionToDelete);
+            await SaveCollectionsAsync();
+        }
     }
 }

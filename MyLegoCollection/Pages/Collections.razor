@@ -10,6 +10,16 @@
 <!-- When a new collection is created, it triggers the LoadCollections method -->
 <CreateCollection OnCollectionCreated="LoadCollections" />
 
+@if (!string.IsNullOrEmpty(successMessage))
+{
+    <p style="color: green;">@successMessage</p>
+}
+
+@if (!string.IsNullOrEmpty(errorMessage))
+{
+    <p style="color: red;">@errorMessage</p>
+}
+
 @if (CollectionService.Collections.Count == 0)
 {
     <p>No collections yet. Try to create your first collection !</p>
@@ -19,23 +29,92 @@ else
     <ul>
         @foreach (var collection in CollectionService.Collections)
         {
-            <li>@collection.Name (@collection.Sets.Count sets)</li>
+            <li>
+                @collection.Name (@collection.Sets.Count sets)
+                <button class="btn btn-danger" @onclick="() => ShowConfirmation(collection)">Delete</button>
+                
+                <!-- Confirmation process before deletion of a collection -->
+                @if (collectionToDelete == collection && isConfirmationVisible)
+                {
+                    <div>
+                        <label for="confirmationInput">Type 'CONFIRM' to delete:</label>
+                        <input id="confirmationInput" @bind="confirmationText" @oninput="UpdateConfirmText" @onkeydown="HandleKeyDown" placeholder="Type CONFIRM" />
+                    </div>
+                }
+            </li>
         }
     </ul>
 }
 
 @code {
+    private string successMessage = "";
+    private string errorMessage = "";
+    private bool isConfirmationVisible = false;  // Toggle for deletion confirmation input
+    private string confirmationText = "";
+    private LegoCollection collectionToDelete;
+    
     // Called when the component is initialized
     protected override async Task OnInitializedAsync()
     {
         await CollectionService.LoadCollectionsAsync(); // Load existing collections from LocalStorage
     }
 
-    // Reloads the collections and updates the UI
+    // Reload the collections and updates the UI
     private async Task LoadCollections()
     {
         await CollectionService.LoadCollectionsAsync(); // Refresh the collections list
 
+        StateHasChanged(); // Force UI update to reflect changes
+    }
+    
+    // Updates the search query when the user types
+    private void UpdateConfirmText(ChangeEventArgs e)
+    {
+        confirmationText = e.Value?.ToString() ?? "";
+    }
+    
+    // Show an input field for the selected collection to confirm deletion
+    private void ShowConfirmation(LegoCollection collection)
+    {
+        collectionToDelete = collection;
+        isConfirmationVisible = true;
+        errorMessage = ""; // Reset error message
+        confirmationText = ""; // Reset confirmation message
+        
+        StateHasChanged(); // Force UI update to reflect changes
+    }
+    
+    private async Task HandleKeyDown(KeyboardEventArgs e)
+    {
+        if (e.Key == "Enter")
+        {
+            if (confirmationText == "CONFIRM")
+            {
+                await DeleteCollection(collectionToDelete);
+            }
+            else
+            {
+                errorMessage = "You must type 'CONFIRM' to delete the collection.";
+            }
+        }
+    }
+    
+    private async Task DeleteCollection(LegoCollection collection)
+    {
+        // Delete a collection using the CollectionService
+        await CollectionService.DeleteCollection(collection);
+        
+        successMessage = $"Collection named '{collection.Name}' has been deleted!"; // Display success message
+        isConfirmationVisible = false; // Disable confirmation input field
+        errorMessage = ""; // Reset error message
+        
+        StateHasChanged(); // Force UI update to reflect changes
+        
+        // Triggering automatic message reset after 3 seconds
+        await Task.Delay(3000);  // 3 seconds delay
+        successMessage = ""; // Reset success message
+        confirmationText = ""; // Reset confirmation message
+        
         StateHasChanged(); // Force UI update to reflect changes
     }
 }

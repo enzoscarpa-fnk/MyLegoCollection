@@ -10,6 +10,7 @@ builder.RootComponents.Add<HeadOutlet>("head::after");
 
 // Register the Blazored LocalStorage service for storing data in the browser
 builder.Services.AddBlazoredLocalStorage();
+builder.Services.AddSingleton<CollectionService>();
 
 // Register an HTTP client with the base address of the application
 builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });

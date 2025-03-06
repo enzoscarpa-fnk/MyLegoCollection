@@ -16,16 +16,17 @@ namespace MyLegoCollection.Models
             _localStorage = localStorage;
         }
 
+        // Loads collections when initialized
+        public async Task InitializeAsync()
+        {
+            await LoadCollectionsAsync();
+        }
+        
         // Loads collections from local storage
         public async Task LoadCollectionsAsync()
         {
-            var json = await _localStorage.GetItemAsStringAsync("collections");
-        
-            // If data exists, deserialize it into a list of collections
-            if (!string.IsNullOrEmpty(json))
-            {
-                Collections = JsonSerializer.Deserialize<List<LegoCollection>>(json) ?? new List<LegoCollection>();
-            }
+            // Uses GetItemAsync method to load collections straight from LocalStorage
+            Collections = await _localStorage.GetItemAsync<List<LegoCollection>>("collections") ?? new List<LegoCollection>();
         }
 
         // Saves the current collections list to local storage
@@ -48,11 +49,29 @@ namespace MyLegoCollection.Models
             await SaveCollectionsAsync();
         }
         
-        // Adds a new collection to the list and saves it to local storage
-        public async Task DeleteCollection(LegoCollection collectionToDelete)
+        // Deletes a collection in the list and removes it from local storage
+        public async Task DeleteCollection(string collectionId)
         {
-            Collections.Remove(collectionToDelete);
-            await SaveCollectionsAsync();
+            var collectionToRemove = Collections.FirstOrDefault(c => c.Id == collectionId);
+            if (collectionToRemove != null)
+            {
+                Collections.Remove(collectionToRemove);
+                await SaveCollectionsAsync();
+            }
+        }
+        
+        // Adds a set to a selected collection and saves it to local storage
+        public async Task AddSetToCollection(string collectionId, LegoSet set)
+        {
+            var collection = Collections.FirstOrDefault(c => c.Id == collectionId);
+            if (collection != null)
+            {
+                if (!collection.Sets.Any(s => s.SetNum == set.SetNum)) // Verification to avoid duplicate sets
+                {
+                    collection.Sets.Add(set);
+                    await SaveCollectionsAsync();
+                }
+            }
         }
     }
 }

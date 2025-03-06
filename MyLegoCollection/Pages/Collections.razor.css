@@ -1,0 +1,42 @@
+.collections-container {
+    display: flex;
+}
+
+.collections-list {
+    width: 30%;
+    border-right: 1px solid #ccc;
+    padding-right: 10px;
+}
+
+.collections-list ul {
+    list-style: none;
+    padding: 0;
+}
+
+.collection-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    text-align: left;
+}
+
+.collection-button:hover {
+    background-color: #1c1f23;
+    color: white;
+}
+
+.delete-button {
+    color: red;
+    border: none;
+    margin-left: 10px;
+}
+
+.delete-button:hover {
+    background-color: red;
+    color: white;
+}
+
+.collection-details {
+    width: 70%;
+    padding-left: 10px;
+}

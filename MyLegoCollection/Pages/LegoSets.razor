@@ -1,6 +1,7 @@
 @page "/lego-sets"
 @using MyLegoCollection.Models
 @inject RebrickableService RebrickableService
+@inject CollectionService CollectionService
 
 <PageTitle>Sets - My LEGO Collection</PageTitle>
 
@@ -35,5 +36,10 @@ else
     protected override async Task OnInitializedAsync()
     {
         sets = await RebrickableService.GetSetsAsync(); // Load LEGO sets from the API
+        
+        if (CollectionService.Collections.Count == 0) // Prevents reloading if already in LocalStorage
+        {
+            await CollectionService.LoadCollectionsAsync(); // Load existing collections from LocalStorage
+        }
     }
 }

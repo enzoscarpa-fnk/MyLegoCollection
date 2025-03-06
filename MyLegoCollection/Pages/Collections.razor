@@ -42,7 +42,7 @@ else
                         {
                             <div>
                                 <label for="confirmationInput">Type 'CONFIRM' to delete:</label>
-                                <input id="confirmationInput" @bind="confirmationText" @oninput="UpdateConfirmText" @onkeydown="HandleKeyDown" placeholder="Type CONFIRM"/>
+                                <input id="confirmationInput" @bind="confirmationText" @oninput="UpdateConfirmText" @onkeydown="HandleKeyDown" placeholder="Type CONFIRM" autocomplete="off" spellcheck="false"/>
                             </div>
                         }
                     </li>
@@ -108,17 +108,26 @@ else
     
     private async Task DeleteCollection(string collectionId)
     {
+        var collectionToRemove = CollectionService.Collections.FirstOrDefault(c => c.Id == collectionId);
+
+        if (collectionToRemove == null)
+        {
+            errorMessage = "Collection not found.";
+            return;
+        }
+
+        // Save name before deletion
+        var deletedCollectionName = collectionToRemove.Name;
+        
         // Delete a collection using the CollectionService
         await CollectionService.DeleteCollection(collectionId);
 
-        var deletedCollection = CollectionService.Collections.FirstOrDefault(c => c.Id == collectionId);
-        successMessage = deletedCollection != null ? $"Collection named '{deletedCollection.Name}' has been deleted!" : "Collection successfully deleted!"; // Display success message
+        successMessage = $"Collection named '{deletedCollectionName}' has been deleted!"; // Display success message
         isConfirmationVisible = false; // Disable confirmation input field
         errorMessage = ""; // Reset error message
         
-        if (selectedCollection.Id == collectionId)
+        if (selectedCollection != null && selectedCollection.Id == collectionId)
         {
-            selectedCollectionId = null;
             selectedCollection = null;
         }
         

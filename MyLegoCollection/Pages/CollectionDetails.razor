@@ -1,0 +1,39 @@
+@using MyLegoCollection.Models
+
+@if (Collection != null)
+{
+    <h3>@Collection?.Name</h3>
+    
+    @if (Collection.Sets.Count == 0)
+    {
+        <p>This collection has no sets yet.</p>
+    }
+    else
+    {
+        <ul>
+            @foreach (var set in Collection.Sets)
+            {
+                <li>
+                    <span>@set.SetNum - @set.Name</span>
+                    <button @onclick="() => RemoveSet(set.SetNum)" class="remove-button">x</button>
+                </li>
+            }
+        </ul>
+    }
+}
+else
+{
+    <p>Select a collection to display its content.</p>
+}
+
+@code {
+    [Parameter] public LegoCollection Collection { get; set; }
+    [Inject] private CollectionService CollectionService { get; set; }
+
+    private async Task RemoveSet(string setNum)
+    {
+        Collection.Sets.RemoveAll(s => s.SetNum == setNum);
+        await CollectionService.SaveCollectionsAsync();
+        StateHasChanged();
+    }
+}

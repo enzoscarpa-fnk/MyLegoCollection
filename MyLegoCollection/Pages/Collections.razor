@@ -26,24 +26,41 @@
 }
 else
 {
-    <ul>
-        @foreach (var collection in CollectionService.Collections)
-        {
-            <li>
-                @collection.Name (@collection.Sets.Count sets)
-                <button class="btn btn-danger" @onclick="() => ShowConfirmation(collection)">Delete</button>
-                
-                <!-- Confirmation process before deletion of a collection -->
-                @if (collectionToDelete == collection && isConfirmationVisible)
+    <div class="collections-container">
+        <div class="collections-list">
+            <ul>
+                @foreach (var collection in CollectionService.Collections)
                 {
-                    <div>
-                        <label for="confirmationInput">Type 'CONFIRM' to delete:</label>
-                        <input id="confirmationInput" @bind="confirmationText" @oninput="UpdateConfirmText" @onkeydown="HandleKeyDown" placeholder="Type CONFIRM" />
-                    </div>
+                    <li>
+                        <button @onclick="() => SelectCollection(collection.Id)" class="collection-button">
+                            @collection.Name (@collection.Sets.Count sets)
+                        </button>
+                        <button @onclick="() => ShowConfirmation(collection)" class="delete-button">x</button>
+
+                        <!-- Confirmation process before deletion of a collection -->
+                        @if (collectionToDelete == collection && isConfirmationVisible)
+                        {
+                            <div>
+                                <label for="confirmationInput">Type 'CONFIRM' to delete:</label>
+                                <input id="confirmationInput" @bind="confirmationText" @oninput="UpdateConfirmText" @onkeydown="HandleKeyDown" placeholder="Type CONFIRM" autocomplete="off" spellcheck="false"/>
+                            </div>
+                        }
+                    </li>
                 }
-            </li>
-        }
-    </ul>
+            </ul>
+        </div>
+        
+        <div class="collection-details">
+            @if (selectedCollection != null)
+            {
+                <CollectionDetails Collection="selectedCollection" />
+            }
+            else
+            {
+                <p>Select a collection to view its sets.</p>
+            }
+        </div>
+    </div>
 }
 
 @code {
@@ -51,12 +68,17 @@ else
     private string errorMessage = "";
     private bool isConfirmationVisible = false;  // Toggle for deletion confirmation input
     private string confirmationText = "";
+    private string? selectedCollectionId;
     private LegoCollection collectionToDelete;
+    private LegoCollection selectedCollection;
     
     // Called when the component is initialized
     protected override async Task OnInitializedAsync()
     {
-        await CollectionService.LoadCollectionsAsync(); // Load existing collections from LocalStorage
+        if (CollectionService.Collections.Count == 0) // Prevents reloading if already in LocalStorage
+        {
+            await CollectionService.LoadCollectionsAsync(); // Load existing collections from LocalStorage
+        }
     }
 
     // Reload the collections and updates the UI
@@ -84,29 +106,32 @@ else
         StateHasChanged(); // Force UI update to reflect changes
     }
     
-    private async Task HandleKeyDown(KeyboardEventArgs e)
+    private async Task DeleteCollection(string collectionId)
     {
-        if (e.Key == "Enter")
+        var collectionToRemove = CollectionService.Collections.FirstOrDefault(c => c.Id == collectionId);
+
+        if (collectionToRemove == null)
         {
-            if (confirmationText == "CONFIRM")
-            {
-                await DeleteCollection(collectionToDelete);
-            }
-            else
-            {
-                errorMessage = "You must type 'CONFIRM' to delete the collection.";
-            }
+            errorMessage = "Collection not found.";
+            return;
         }
-    }
-    
-    private async Task DeleteCollection(LegoCollection collection)
-    {
-        // Delete a collection using the CollectionService
-        await CollectionService.DeleteCollection(collection);
+
+        // Save name before deletion
+        var deletedCollectionName = collectionToRemove.Name;
         
-        successMessage = $"Collection named '{collection.Name}' has been deleted!"; // Display success message
+        // Delete a collection using the CollectionService
+        await CollectionService.DeleteCollection(collectionId);
+
+        successMessage = $"Collection named '{deletedCollectionName}' has been deleted!"; // Display success message
         isConfirmationVisible = false; // Disable confirmation input field
         errorMessage = ""; // Reset error message
+        
+        if (selectedCollection != null && selectedCollection.Id == collectionId)
+        {
+            selectedCollection = null;
+        }
+        
+        await LoadCollections();
         
         StateHasChanged(); // Force UI update to reflect changes
         
@@ -116,5 +141,26 @@ else
         confirmationText = ""; // Reset confirmation message
         
         StateHasChanged(); // Force UI update to reflect changes
+    }
+    
+    private void SelectCollection(string id)
+    {
+        selectedCollectionId = id;
+        selectedCollection = CollectionService.Collections.FirstOrDefault(c => c.Id == id);
+    }
+    
+    private async Task HandleKeyDown(KeyboardEventArgs e)
+    {
+        if (e.Key == "Enter")
+        {
+            if (confirmationText == "CONFIRM")
+            {
+                await DeleteCollection(collectionToDelete.Id);
+            }
+            else
+            {
+                errorMessage = "You must type 'CONFIRM' to delete the collection.";
+            }
+        }
     }
 }

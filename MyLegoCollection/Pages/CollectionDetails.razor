@@ -11,7 +11,7 @@
     else
     {
         <ul>
-            @foreach (var set in Collection.Sets)
+            @foreach (var set in Collection.Sets.Skip((currentPage - 1) * pageSize).Take(pageSize))
             {
                 <li>
                     <span>@set.SetNum - @set.Name</span>
@@ -19,6 +19,10 @@
                 </li>
             }
         </ul>
+        
+        <button @onclick="PreviousPage" disabled="@(currentPage == 1)">Previous</button>
+        <span>Page @currentPage of @totalPages</span>
+        <button @onclick="NextPage" disabled="@(currentPage == totalPages)">Next</button>
     }
 }
 else
@@ -29,11 +33,31 @@ else
 @code {
     [Parameter] public LegoCollection Collection { get; set; }
     [Inject] private CollectionService CollectionService { get; set; }
+    
+    private int currentPage = 1;
+    private int pageSize = 10;
+    private int totalPages => Collection.Sets == null || Collection.Sets.Count == 0 ? 1 : (int)Math.Ceiling((double)Collection.Sets.Count / pageSize);
 
     private async Task RemoveSet(string setNum)
     {
         Collection.Sets.RemoveAll(s => s.SetNum == setNum);
         await CollectionService.SaveCollectionsAsync();
         StateHasChanged();
+    }
+    
+    private void NextPage()
+    {
+        if (currentPage < totalPages)
+        {
+            currentPage++;
+        }
+    }
+
+    private void PreviousPage()
+    {
+        if (currentPage > 1)
+        {
+            currentPage--;
+        }
     }
 }

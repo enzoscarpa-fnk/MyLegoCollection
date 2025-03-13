@@ -29,7 +29,7 @@ else
     <div class="collections-container">
         <div class="collections-list">
             <ul>
-                @foreach (var collection in CollectionService.Collections)
+                @foreach (var collection in CollectionService.Collections.Skip((currentPage - 1) * pageSize).Take(pageSize))
                 {
                     <li>
                         <button @onclick="() => SelectCollection(collection.Id)" class="collection-button">
@@ -48,6 +48,10 @@ else
                     </li>
                 }
             </ul>
+            
+            <button @onclick="PreviousPage" disabled="@(currentPage == 1)">Previous</button>
+            <span>Page @currentPage of @totalPages</span>
+            <button @onclick="NextPage" disabled="@(currentPage == totalPages)">Next</button>
         </div>
         
         <div class="collection-details">
@@ -71,6 +75,9 @@ else
     private string? selectedCollectionId;
     private LegoCollection collectionToDelete;
     private LegoCollection selectedCollection;
+    private int currentPage = 1;
+    private int pageSize = 10;
+    private int totalPages => CollectionService.Collections == null || CollectionService.Collections.Count == 0 ? 1 : (int)Math.Ceiling((double)CollectionService.Collections.Count / pageSize);
     
     // Called when the component is initialized
     protected override async Task OnInitializedAsync()
@@ -147,6 +154,22 @@ else
     {
         selectedCollectionId = id;
         selectedCollection = CollectionService.Collections.FirstOrDefault(c => c.Id == id);
+    }
+    
+    private void NextPage()
+    {
+        if (currentPage < totalPages)
+        {
+            currentPage++;
+        }
+    }
+
+    private void PreviousPage()
+    {
+        if (currentPage > 1)
+        {
+            currentPage--;
+        }
     }
     
     private async Task HandleKeyDown(KeyboardEventArgs e)

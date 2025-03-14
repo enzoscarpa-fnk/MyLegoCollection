@@ -1,37 +1,56 @@
 ﻿@page "/"
 @inject NavigationManager Navigation
+@using MyLegoCollection.Pages
+@using MyLegoCollection.Models
 
 <PageTitle>My LEGO Collection</PageTitle>
 
-<h1>Welcome to My LEGO Collection</h1>
+<header id="header">
+    <nav id="menu">
+        <div id="logo">
+            <img src="images/logobrick.png" alt="Logo" />
+        </div>
+        <ul>
+            <li>
+                <a @onclick="() => SetActiveComponent(ComponentType.Discover)" class="@(activeComponent == ComponentType.Discover ? "active" : "")">
+                    Discover new sets
+                </a><br/>
+            </li>
+            <li>
+                <a @onclick="() => SetActiveComponent(ComponentType.Search)" class="@(activeComponent == ComponentType.Search ? "active" : "")">
+                    Search for sets
+                </a><br/>
+            </li>
+            <li>
+                <a @onclick="() => SetActiveComponent(ComponentType.Collection)" class="@(activeComponent == ComponentType.Collection ? "active" : "")">
+                    Manage my collections
+                </a><br/>
+            </li>
+        </ul>
+    </nav>
+</header>
 
-<h4>What you can do with this service:</h4>
-
-<br/>
-<p>Discover new LEGO sets</p>
-<button class="btn btn-primary" @onclick="GoToLegoSets">Discover</button><br/>
-
-<br/>
-<p>Search for LEGO sets</p>
-<button class="btn btn-primary" @onclick="GoToSearch">Search</button><br/>
-
-<br/>
-<p>Manage my LEGO collection</p>
-<button class="btn btn-primary" @onclick="GoToCollection">Manage</button><br/>
+<main id="content">
+    @if (activeComponent == ComponentType.Discover)
+    {
+        <Discover />
+    }
+    else if (activeComponent == ComponentType.Search)
+    {
+        <Search />
+    }
+    else if (activeComponent == ComponentType.Collection)
+    {
+        <Collections />
+    }
+</main>
 
 @code {
-    private void GoToLegoSets()
+    private enum ComponentType { Discover, Search, Collection }
+    private ComponentType activeComponent = ComponentType.Discover;
+
+    private void SetActiveComponent(ComponentType component)
     {
-        Navigation.NavigateTo("/lego-sets");
-    }
-    
-    private void GoToSearch()
-    {
-        Navigation.NavigateTo("/search");
-    }
-    
-    private void GoToCollection()
-    {
-        Navigation.NavigateTo("/collections");
+        activeComponent = component;
     }
 }

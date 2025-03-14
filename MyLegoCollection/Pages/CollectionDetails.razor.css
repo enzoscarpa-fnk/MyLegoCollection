@@ -1,36 +1,3 @@
-.collections-container {
-    display: flex;
-}
-
-.collections-list {
-    width: 30%;
-    border-right: 1px solid #233d4d;
-    padding-right: 10px;
-}
-
-.collections-list ul {
-    list-style: none;
-    padding: 0;
-}
-
-.collections-list a {
-    margin: 0 0 0 10px;
-    padding: 3px 0 3px 15px;
-    border-left: 1px solid #233d4d;
-    text-decoration: none;
-    color: #f7f7f7;
-    cursor: pointer;
-}
-
-.collections-list a:hover {
-    color: #cdcdcd;
-}
-
-.collection-details {
-    width: 70%;
-    padding-left: 10px;
-}
-
 .pagination {
     margin: 20px;
 }
@@ -60,19 +27,27 @@
     cursor: default;
 }
 
-ul {
-    margin: 0 20px 5px 0;
-    border-top: 1px solid #233d4d;
+h4 {
+    margin: 0 0 0 20px;
+    color: #fe7f2d;
 }
 
-li:first-child {
-    padding-top: 5px;
+ul {
+    margin: 5px 0 0 20px;
+    padding: 5px 0 0 0;
+    border-top: 1px solid #233d4d;
 }
 
 li {
     list-style: none;
+}
+
+.collection-set-line {
+    margin: 0 0 0 10px;
+    padding: 3px 0 3px 15px;
+    border-left: 1px solid #233d4d;
+    text-decoration: none;
     color: #f7f7f7;
-    font-weight: bold;
 }
 
 .remove-button {

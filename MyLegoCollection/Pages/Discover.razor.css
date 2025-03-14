@@ -1,0 +1,43 @@
+.sets-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 15px;
+    padding: 0;
+    list-style: none;
+}
+
+.set-item {
+    display: grid;
+    grid-template-columns: 1fr 1fr 5fr;
+    grid-template-rows: 100px;
+    align-items: center;
+    padding: 10px;
+}
+
+.set-item:nth-child(even) {
+    background-color: #2e2f30;
+}
+
+.set-image {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    overflow: hidden;
+}
+
+.set-image img {
+    max-height: 100%;
+    width: auto;
+    object-fit: contain;
+}
+
+.set-reference {
+    font-weight: bold;
+    color: darkorange;
+    text-align: center;
+}
+
+.set-details {
+    font-size: 0.9em;
+}

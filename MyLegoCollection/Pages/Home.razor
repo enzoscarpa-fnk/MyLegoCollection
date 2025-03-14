@@ -46,8 +46,8 @@
 </main>
 
 @code {
-    private enum ComponentType { None, Discover, Search, Collection }
-    private ComponentType activeComponent = ComponentType.None;
+    private enum ComponentType { Discover, Search, Collection }
+    private ComponentType activeComponent = ComponentType.Discover;
 
     private void SetActiveComponent(ComponentType component)
     {

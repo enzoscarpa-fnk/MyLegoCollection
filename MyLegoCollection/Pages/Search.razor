@@ -5,15 +5,19 @@
 
 <PageTitle>Search - My LEGO Collection</PageTitle>
 
-<h3>Search LEGO sets</h3>
+<h4>Search for LEGO sets</h4>
 
 <!-- Input field for the search query -->
-<input @bind="searchQuery" @oninput="UpdateSearchQuery" @onkeydown="HandleKeyDown" placeholder="Search for a LEGO set..." />
-<button @onclick="SearchSets">Search</button>
-<br/>
-<button @onclick="PreviousPage" disabled="@(currentPage == 1)">Previous</button>
-<span>Page @currentPage of @totalPages</span>
-<button @onclick="NextPage" disabled="@(currentPage == totalPages)">Next</button>
+<div class="search-field">
+    <input @bind="searchQuery" @oninput="UpdateSearchQuery" @onkeydown="HandleKeyDown" placeholder="Search for a LEGO set..." />
+    <button @onclick="SearchSets">Search</button>
+</div>
+
+<div class="pagination">
+    <button @onclick="PreviousPage" disabled="@(currentPage == 1)">&lt;</button>
+    <span>&emsp;Page @currentPage of @totalPages&emsp;</span>
+    <button @onclick="NextPage" disabled="@(currentPage == totalPages)">&gt;</button>
+</div>
 
 @if (sets == null)
 {
@@ -25,47 +29,56 @@ else if (!sets.Any())
 }
 else
 {
-    <ul>
+    <ul class="sets-grid">
         @foreach (var set in sets.Skip((currentPage - 1) * pageSize).Take(pageSize))
         {
-            <li>
-                <strong>@set.SetNum @set.Name</strong> (@set.Year) - @set.NumParts pieces<br />
-                <button @onclick="() => SelectSetToAdd(set)">Add to Collection</button><br />
-                
-                @if (dropdownVisibility.ContainsKey(set.SetNum) && dropdownVisibility[set.SetNum])
-                {
-                    <div class="collection-dropdown">
-                        <p>Select a collection:</p>
-                        <select @bind="selectedCollectionForSet[set.SetNum]">
-                            <option value="">-- Choose a collection --</option>
-                            @foreach (var collection in CollectionService.Collections)
+            <li class="set-item">
+                <div class="set-image">
+                    <img src="@set.SetImgUrl" alt="@set.Name" />
+                </div>
+                <div class="set-reference">
+                    @set.SetNum
+                </div>
+                <div class="set-details">
+                    <strong>@set.Name</strong><br/>
+                    @set.Year - @set.NumParts parts<br/>
+
+                    <button @onclick="() => SelectSetToAdd(set)">Add to Collection</button><br/>
+
+                    @if (dropdownVisibility.ContainsKey(set.SetNum) && dropdownVisibility[set.SetNum])
+                    {
+                        <div class="collection-dropdown">
+                            <select @bind="selectedCollectionForSet[set.SetNum]">
+                                <option value="">-- Choose a collection --</option>
+                                @foreach (var collection in CollectionService.Collections)
+                                {
+                                    <option value="@collection.Id">@collection.Name</option>
+                                }
+                            </select>
+                            <button @onclick="ConfirmAddToCollection">Confirm</button>
+
+                            @if (successMessages.TryGetValue(set.SetNum, out var successMsg))
                             {
-                                <option value="@collection.Id">@collection.Name</option>
+                                <p style="color: green;">@successMsg</p>
                             }
-                        </select>
-                        <button @onclick="ConfirmAddToCollection">Confirm</button>
 
-                        @if (successMessages.TryGetValue(set.SetNum, out var successMsg))
-                        {
-                            <p style="color: green;">@successMsg</p>
-                        }
-
-                        @if (errorMessages.TryGetValue(set.SetNum, out var errorMsg))
-                        {
-                            <p style="color: red;">@errorMsg</p>
-                        }
-                    </div>
-                }
-                
-                <img src="@set.SetImgUrl" alt="@set.Name" width="100" />
+                            @if (errorMessages.TryGetValue(set.SetNum, out var errorMsg))
+                            {
+                                <p style="color: red;">@errorMsg</p>
+                            }
+                        </div>
+                    }
+                </div>
             </li>
         }
     </ul>
 }
 
-<button @onclick="PreviousPage" disabled="@(currentPage == 1)">Previous</button>
-<span>Page @currentPage of @totalPages</span>
-<button @onclick="NextPage" disabled="@(currentPage == totalPages)">Next</button>
+<div class="pagination">
+    <button @onclick="PreviousPage" disabled="@(currentPage == 1)">&lt;</button>
+    <span>&emsp;Page @currentPage of @totalPages&emsp;</span>
+    <button @onclick="NextPage" disabled="@(currentPage == totalPages)">&gt;</button>
+</div>
 
 @code {
     private List<LegoSet> sets; // List to store LEGO sets
@@ -107,6 +120,7 @@ else
         if (!string.IsNullOrWhiteSpace(searchQuery))
         {
             sets = await RebrickableService.SearchSetsAsync(searchQuery);
+            currentPage = 1;
         }
     }
 

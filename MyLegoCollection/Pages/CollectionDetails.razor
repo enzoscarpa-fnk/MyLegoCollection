@@ -2,7 +2,7 @@
 
 @if (Collection != null)
 {
-    <h3>@Collection?.Name</h3>
+    <h4>@Collection?.Name</h4>
     
     @if (Collection.Sets.Count == 0)
     {
@@ -14,15 +14,18 @@
             @foreach (var set in Collection.Sets.Skip((currentPage - 1) * pageSize).Take(pageSize))
             {
                 <li>
-                    <span>@set.SetNum - @set.Name</span>
-                    <button @onclick="() => RemoveSet(set.SetNum)" class="remove-button">x</button>
+                    <span><button @onclick="() => RemoveSet(set.SetNum)" class="remove-button">&#10005;</button>
+                        <span class="collection-set-line">@set.SetNum - @set.Name</span>
+                    </span>
                 </li>
             }
         </ul>
-        
-        <button @onclick="PreviousPage" disabled="@(currentPage == 1)">Previous</button>
-        <span>Page @currentPage of @totalPages</span>
-        <button @onclick="NextPage" disabled="@(currentPage == totalPages)">Next</button>
+
+        <div class="pagination">
+            <button @onclick="PreviousPage" disabled="@(currentPage == 1)">&lt;</button>
+            <span>&emsp;Page @currentPage of @totalPages&emsp;</span>
+            <button @onclick="NextPage" disabled="@(currentPage == totalPages)">&gt;</button>
+        </div>
     }
 }
 else

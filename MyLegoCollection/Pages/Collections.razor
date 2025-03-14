@@ -4,7 +4,7 @@
 
 <PageTitle>Collections - My LEGO Collection</PageTitle>
 
-<h4>My collections</h4>
+<h4>Manage my LEGO collections</h4>
 
 <!-- Include the component for creating a new collection -->
 <!-- When a new collection is created, it triggers the LoadCollections method -->
@@ -28,14 +28,15 @@ else
 {
     <div class="collections-container">
         <div class="collections-list">
+            <h4>My collections</h4>
             <ul>
                 @foreach (var collection in CollectionService.Collections.Skip((currentPage - 1) * pageSize).Take(pageSize))
                 {
                     <li>
-                        <button @onclick="() => SelectCollection(collection.Id)" class="collection-button">
-                            @collection.Name (@collection.Sets.Count sets)
-                        </button>
-                        <button @onclick="() => ShowConfirmation(collection)" class="delete-button">x</button>
+                        <span>
+                            <button @onclick="() => ShowConfirmation(collection)" class="remove-button">&#10005;</button>
+                            <a @onclick="() => SelectCollection(collection.Id)">@collection.Name (@collection.Sets.Count sets)</a>
+                        </span>
 
                         <!-- Confirmation process before deletion of a collection -->
                         @if (collectionToDelete == collection && isConfirmationVisible)

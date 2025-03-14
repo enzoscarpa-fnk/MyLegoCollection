@@ -4,7 +4,7 @@
 
 .collections-list {
     width: 30%;
-    border-right: 1px solid #ccc;
+    border-right: 1px solid #233d4d;
     padding-right: 10px;
 }
 
@@ -13,27 +13,17 @@
     padding: 0;
 }
 
-.collection-button {
-    background: none;
-    border: none;
+.collections-list a {
+    margin: 0 0 0 10px;
+    padding: 3px 0 3px 15px;
+    border-left: 1px solid #233d4d;
+    text-decoration: none;
+    color: #f7f7f7;
     cursor: pointer;
-    text-align: left;
 }
 
-.collection-button:hover {
-    background-color: #1c1f23;
-    color: white;
-}
-
-.delete-button {
-    color: red;
-    border: none;
-    margin-left: 10px;
-}
-
-.delete-button:hover {
-    background-color: red;
-    color: white;
+.collections-list a:hover {
+    color: #cdcdcd;
 }
 
 .collection-details {
@@ -51,8 +41,9 @@
     border-radius: 50%;
     border: 2px solid #233d4d;
     background-color: #2e2f30;
-    color: #fe7f2d;
+    color: #f7f7f7;
     font-size: 13px;
+    font-weight: bold;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -65,6 +56,45 @@
 }
 
 .pagination button:disabled {
+    opacity: 0.5;
+    cursor: default;
+}
+
+ul {
+    margin: 0 20px 5px 0;
+    border-top: 1px solid #233d4d;
+}
+
+li:first-child {
+    padding-top: 5px;
+}
+
+li {
+    list-style: none;
+    color: #f7f7f7;
+    font-weight: bold;
+}
+
+.remove-button {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    border: 2px solid #233d4d;
+    background-color: #cd0c3f;
+    color: #f7f7f7;
+    font-size: 12px;
+    font-weight: bold;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.remove-button:hover {
+    background-color: #233d4d;
+}
+
+.remove-button:disabled {
     opacity: 0.5;
     cursor: default;
 }

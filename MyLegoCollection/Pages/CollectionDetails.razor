@@ -14,8 +14,9 @@
             @foreach (var set in Collection.Sets.Skip((currentPage - 1) * pageSize).Take(pageSize))
             {
                 <li>
-                    <span>@set.SetNum - @set.Name</span>
-                    <button @onclick="() => RemoveSet(set.SetNum)" class="remove-button">x</button>
+                    <span><button @onclick="() => RemoveSet(set.SetNum)" class="remove-button">&#10005;</button>
+                        <span class="collection-set-line">@set.SetNum - @set.Name</span>
+                    </span>
                 </li>
             }
         </ul>

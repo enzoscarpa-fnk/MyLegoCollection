@@ -8,8 +8,9 @@
     border-radius: 50%;
     border: 2px solid #233d4d;
     background-color: #2e2f30;
-    color: #fe7f2d;
+    color: #f7f7f7;
     font-size: 13px;
+    font-weight: bold;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -22,6 +23,53 @@
 }
 
 .pagination button:disabled {
+    opacity: 0.5;
+    cursor: default;
+}
+
+h4 {
+    margin: 0 0 0 20px;
+    color: #fe7f2d;
+}
+
+ul {
+    margin: 5px 0 0 20px;
+    padding: 5px 0 0 0;
+    border-top: 1px solid #233d4d;
+}
+
+li {
+    list-style: none;
+}
+
+.collection-set-line {
+    margin: 0 0 0 10px;
+    padding: 3px 0 3px 15px;
+    border-left: 1px solid #233d4d;
+    text-decoration: none;
+    color: #f7f7f7;
+}
+
+.remove-button {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    border: 2px solid #233d4d;
+    background-color: #cd0c3f;
+    color: #f7f7f7;
+    font-size: 12px;
+    font-weight: bold;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.remove-button:hover {
+    background-color: #233d4d;
+}
+
+.remove-button:disabled {
     opacity: 0.5;
     cursor: default;
 }

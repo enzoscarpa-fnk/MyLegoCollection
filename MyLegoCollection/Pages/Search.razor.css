@@ -57,8 +57,9 @@ ul {
     border-radius: 50%;
     border: 2px solid #233d4d;
     background-color: #2e2f30;
-    color: #fe7f2d;
+    color: #f7f7f7;
     font-size: 13px;
+    font-weight: bold;
     display: flex;
     align-items: center;
     justify-content: center;

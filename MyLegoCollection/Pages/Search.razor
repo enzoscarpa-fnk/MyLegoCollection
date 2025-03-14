@@ -5,15 +5,19 @@
 
 <PageTitle>Search - My LEGO Collection</PageTitle>
 
-<h3>Search LEGO sets</h3>
+<h4>Search for LEGO sets</h4>
 
 <!-- Input field for the search query -->
-<input @bind="searchQuery" @oninput="UpdateSearchQuery" @onkeydown="HandleKeyDown" placeholder="Search for a LEGO set..." />
-<button @onclick="SearchSets">Search</button>
-<br/>
-<button @onclick="PreviousPage" disabled="@(currentPage == 1)">Previous</button>
-<span>Page @currentPage of @totalPages</span>
-<button @onclick="NextPage" disabled="@(currentPage == totalPages)">Next</button>
+<div class="search-field">
+    <input @bind="searchQuery" @oninput="UpdateSearchQuery" @onkeydown="HandleKeyDown" placeholder="Search for a LEGO set..." />
+    <button @onclick="SearchSets">Search</button>
+</div>
+
+<div class="pagination">
+    <button @onclick="PreviousPage" disabled="@(currentPage == 1)">&lt;</button>
+    <span>&emsp;Page @currentPage of @totalPages&emsp;</span>
+    <button @onclick="NextPage" disabled="@(currentPage == totalPages)">&gt;</button>
+</div>
 
 @if (sets == null)
 {
@@ -44,7 +48,6 @@ else
                     @if (dropdownVisibility.ContainsKey(set.SetNum) && dropdownVisibility[set.SetNum])
                     {
                         <div class="collection-dropdown">
-                            <p>Select a collection:</p>
                             <select @bind="selectedCollectionForSet[set.SetNum]">
                                 <option value="">-- Choose a collection --</option>
                                 @foreach (var collection in CollectionService.Collections)
@@ -71,9 +74,11 @@ else
     </ul>
 }
 
-<button @onclick="PreviousPage" disabled="@(currentPage == 1)">Previous</button>
-<span>Page @currentPage of @totalPages</span>
-<button @onclick="NextPage" disabled="@(currentPage == totalPages)">Next</button>
+<div class="pagination">
+    <button @onclick="PreviousPage" disabled="@(currentPage == 1)">&lt;</button>
+    <span>&emsp;Page @currentPage of @totalPages&emsp;</span>
+    <button @onclick="NextPage" disabled="@(currentPage == totalPages)">&gt;</button>
+</div>
 
 @code {
     private List<LegoSet> sets; // List to store LEGO sets
@@ -115,6 +120,7 @@ else
         if (!string.IsNullOrWhiteSpace(searchQuery))
         {
             sets = await RebrickableService.SearchSetsAsync(searchQuery);
+            currentPage = 1;
         }
     }
 

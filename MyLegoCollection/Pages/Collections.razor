@@ -4,7 +4,7 @@
 
 <PageTitle>Collections - My LEGO Collection</PageTitle>
 
-<h3>My collections</h3>
+<h4>My collections</h4>
 
 <!-- Include the component for creating a new collection -->
 <!-- When a new collection is created, it triggers the LoadCollections method -->
@@ -48,10 +48,12 @@ else
                     </li>
                 }
             </ul>
-            
-            <button @onclick="PreviousPage" disabled="@(currentPage == 1)">Previous</button>
-            <span>Page @currentPage of @totalPages</span>
-            <button @onclick="NextPage" disabled="@(currentPage == totalPages)">Next</button>
+
+            <div class="pagination">
+                <button @onclick="PreviousPage" disabled="@(currentPage == 1)">&lt;</button>
+                <span>&emsp;Page @currentPage of @totalPages&emsp;</span>
+                <button @onclick="NextPage" disabled="@(currentPage == totalPages)">&gt;</button>
+            </div>
         </div>
         
         <div class="collection-details">

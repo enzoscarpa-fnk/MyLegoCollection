@@ -1,0 +1,27 @@
+.pagination {
+    margin: 20px;
+}
+
+.pagination button {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    border: 2px solid #233d4d;
+    background-color: #2e2f30;
+    color: #fe7f2d;
+    font-size: 13px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.pagination button:hover {
+    background-color: #233d4d;
+}
+
+.pagination button:disabled {
+    opacity: 0.5;
+    cursor: default;
+}

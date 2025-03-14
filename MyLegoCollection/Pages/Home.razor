@@ -1,23 +1,30 @@
 ﻿@page "/"
 @inject NavigationManager Navigation
 @using MyLegoCollection.Pages
+@using MyLegoCollection.Models
 
 <PageTitle>My LEGO Collection</PageTitle>
 
 <header id="header">
     <nav id="menu">
         <div id="logo">
-            <p>Place logo here</p>
+            <img src="images/logobrick.png" alt="Logo" />
         </div>
         <ul>
             <li>
-                <button @onclick="() => SetActiveComponent(ComponentType.Discover)">Discover new LEGO sets</button><br/>
+                <a @onclick="() => SetActiveComponent(ComponentType.Discover)" class="@(activeComponent == ComponentType.Discover ? "active" : "")">
+                    Discover new sets
+                </a><br/>
             </li>
             <li>
-                <button @onclick="() => SetActiveComponent(ComponentType.Search)">Search for LEGO sets</button><br/>
+                <a @onclick="() => SetActiveComponent(ComponentType.Search)" class="@(activeComponent == ComponentType.Search ? "active" : "")">
+                    Search for sets
+                </a><br/>
             </li>
             <li>
-                <button @onclick="() => SetActiveComponent(ComponentType.Collection)">Manage my LEGO collections</button><br/>
+                <a @onclick="() => SetActiveComponent(ComponentType.Collection)" class="@(activeComponent == ComponentType.Collection ? "active" : "")">
+                    Manage my collections
+                </a><br/>
             </li>
         </ul>
     </nav>

@@ -25,39 +25,47 @@ else if (!sets.Any())
 }
 else
 {
-    <ul>
+    <ul class="sets-grid">
         @foreach (var set in sets.Skip((currentPage - 1) * pageSize).Take(pageSize))
         {
-            <li>
-                <strong>@set.SetNum @set.Name</strong> (@set.Year) - @set.NumParts pieces<br />
-                <button @onclick="() => SelectSetToAdd(set)">Add to Collection</button><br />
-                
-                @if (dropdownVisibility.ContainsKey(set.SetNum) && dropdownVisibility[set.SetNum])
-                {
-                    <div class="collection-dropdown">
-                        <p>Select a collection:</p>
-                        <select @bind="selectedCollectionForSet[set.SetNum]">
-                            <option value="">-- Choose a collection --</option>
-                            @foreach (var collection in CollectionService.Collections)
+            <li class="set-item">
+                <div class="set-image">
+                    <img src="@set.SetImgUrl" alt="@set.Name" />
+                </div>
+                <div class="set-reference">
+                    @set.SetNum
+                </div>
+                <div class="set-details">
+                    <strong>@set.Name</strong><br/>
+                    @set.Year - @set.NumParts parts<br/>
+
+                    <button @onclick="() => SelectSetToAdd(set)">Add to Collection</button><br/>
+
+                    @if (dropdownVisibility.ContainsKey(set.SetNum) && dropdownVisibility[set.SetNum])
+                    {
+                        <div class="collection-dropdown">
+                            <p>Select a collection:</p>
+                            <select @bind="selectedCollectionForSet[set.SetNum]">
+                                <option value="">-- Choose a collection --</option>
+                                @foreach (var collection in CollectionService.Collections)
+                                {
+                                    <option value="@collection.Id">@collection.Name</option>
+                                }
+                            </select>
+                            <button @onclick="ConfirmAddToCollection">Confirm</button>
+
+                            @if (successMessages.TryGetValue(set.SetNum, out var successMsg))
                             {
-                                <option value="@collection.Id">@collection.Name</option>
+                                <p style="color: green;">@successMsg</p>
                             }
-                        </select>
-                        <button @onclick="ConfirmAddToCollection">Confirm</button>
 
-                        @if (successMessages.TryGetValue(set.SetNum, out var successMsg))
-                        {
-                            <p style="color: green;">@successMsg</p>
-                        }
-
-                        @if (errorMessages.TryGetValue(set.SetNum, out var errorMsg))
-                        {
-                            <p style="color: red;">@errorMsg</p>
-                        }
-                    </div>
-                }
-                
-                <img src="@set.SetImgUrl" alt="@set.Name" width="100" />
+                            @if (errorMessages.TryGetValue(set.SetNum, out var errorMsg))
+                            {
+                                <p style="color: red;">@errorMsg</p>
+                            }
+                        </div>
+                    }
+                </div>
             </li>
         }
     </ul>

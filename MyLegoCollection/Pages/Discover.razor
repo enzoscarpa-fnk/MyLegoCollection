@@ -5,7 +5,7 @@
 
 <PageTitle>Sets - My LEGO Collection</PageTitle>
 
-<h3>My LEGO Collection</h3>
+<h3>LEGO sets discovery</h3>
 
 @if (sets == null)
 {
@@ -17,13 +17,20 @@ else if (!sets.Any())
 }
 else
 {
-    <ul>
+    <ul class="sets-grid">
         @foreach (var set in sets)
         {
-            <li>
-                <strong>@set.Name</strong> (@set.Year) - @set.NumParts pieces
-                <br />
-                <img src="@set.SetImgUrl" alt="@set.Name" width="100" />
+            <li class="set-item">
+                <div class="set-image">
+                    <img src="@set.SetImgUrl" alt="@set.Name" />
+                </div>
+                <div class="set-reference">
+                    @set.SetNum
+                </div>
+                <div class="set-details">
+                    <strong>@set.Name</strong><br/>
+                    @set.Year - @set.NumParts parts<br/>
+                </div>
             </li>
         }
     </ul>

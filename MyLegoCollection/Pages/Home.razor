@@ -11,6 +11,7 @@
             <img src="images/logobrick.png" alt="Logo" />
         </div>
         <ul>
+            <!-- Navigation links to switch between components -->
             <li>
                 <a @onclick="() => SetActiveComponent(ComponentType.Discover)" class="@(activeComponent == ComponentType.Discover ? "active" : "")">
                     Discover new sets
@@ -31,24 +32,28 @@
 </header>
 
 <main id="content">
+    <!-- Render the active component based on the current value of activeComponent -->
     @if (activeComponent == ComponentType.Discover)
     {
-        <Discover />
+        <Discover/>
     }
     else if (activeComponent == ComponentType.Search)
     {
-        <Search />
+        <Search/>
     }
     else if (activeComponent == ComponentType.Collection)
     {
-        <Collections />
+        <Collections/>
     }
 </main>
 
 @code {
+    // Enum to define the different components
     private enum ComponentType { Discover, Search, Collection }
+    // Tracks the currently active component
     private ComponentType activeComponent = ComponentType.Discover;
 
+    // Method to set the active component
     private void SetActiveComponent(ComponentType component)
     {
         activeComponent = component;

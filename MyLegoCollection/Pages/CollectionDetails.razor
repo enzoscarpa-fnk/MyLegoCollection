@@ -21,6 +21,7 @@
             }
         </ul>
 
+        <!-- Pagination controls -->
         <div class="pagination">
             <button @onclick="PreviousPage" disabled="@(currentPage == 1)">&lt;</button>
             <span>&emsp;Page @currentPage of @totalPages&emsp;</span>
@@ -34,20 +35,24 @@ else
 }
 
 @code {
+    // Parameter to receive the selected collection
     [Parameter] public LegoCollection Collection { get; set; }
+    // Injected service to manage collection operations
     [Inject] private CollectionService CollectionService { get; set; }
     
+    // Pagination variables
     private int currentPage = 1;
     private int pageSize = 10;
     private int totalPages => Collection.Sets == null || Collection.Sets.Count == 0 ? 1 : (int)Math.Ceiling((double)Collection.Sets.Count / pageSize);
 
+    // Removes a set from the collection and updates the UI
     private async Task RemoveSet(string setNum)
     {
-        Collection.Sets.RemoveAll(s => s.SetNum == setNum);
-        await CollectionService.SaveCollectionsAsync();
-        StateHasChanged();
+        await CollectionService.RemoveSetFromCollection(Collection.Id, setNum);
+        StateHasChanged(); // Refresh UI after removal
     }
     
+    // Moves to the next page if possible
     private void NextPage()
     {
         if (currentPage < totalPages)
@@ -56,6 +61,7 @@ else
         }
     }
 
+    // Moves to the previous page if possible
     private void PreviousPage()
     {
         if (currentPage > 1)

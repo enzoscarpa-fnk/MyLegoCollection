@@ -73,5 +73,18 @@ namespace MyLegoCollection.Models
                 }
             }
         }
+        
+        // Removes a set from a selected collection in local storage
+        public async Task RemoveSetFromCollection(string collectionId, string setNum)
+        {
+            var collection = Collections.FirstOrDefault(c => c.Id == collectionId);
+    
+            if (collection != null)
+            {
+                collection.Sets.RemoveAll(s => s.SetNum == setNum);
+        
+                await SaveCollectionsAsync();
+            }
+        }
     }
 }

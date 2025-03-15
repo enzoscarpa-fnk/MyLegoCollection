@@ -7,6 +7,7 @@
 
 <h4>Discover the latest LEGO sets released</h4>
 
+<!-- Pagination controls -->
 <div class="pagination">
     <button @onclick="PreviousPage" disabled="@(currentPage == 1)">&lt;</button>
     <span>&emsp;Page @currentPage of @totalPages&emsp;</span>
@@ -37,8 +38,10 @@ else
                     <strong>@set.Name</strong><br/>
                     @set.Year - @set.NumParts parts<br/>
 
+                    <!-- Button to add set to a collection -->
                     <button @onclick="() => SelectSetToAdd(set)">Add to Collection</button><br/>
 
+                    <!-- Display dropdown if the set's dropdown visibility is enabled -->
                     @if (dropdownVisibility.ContainsKey(set.SetNum) && dropdownVisibility[set.SetNum])
                     {
                         <div class="collection-dropdown">
@@ -51,11 +54,13 @@ else
                             </select>
                             <button @onclick="ConfirmAddToCollection">Confirm</button>
 
+                            <!-- Display success message if any -->
                             @if (successMessages.TryGetValue(set.SetNum, out var successMsg))
                             {
                                 <p style="color: green;">@successMsg</p>
                             }
 
+                            <!-- Display error message if any -->
                             @if (errorMessages.TryGetValue(set.SetNum, out var errorMsg))
                             {
                                 <p style="color: red;">@errorMsg</p>
@@ -68,6 +73,7 @@ else
     </ul>
 }
 
+<!-- Pagination controls -->
 <div class="pagination">
     <button @onclick="PreviousPage" disabled="@(currentPage == 1)">&lt;</button>
     <span>&emsp;Page @currentPage of @totalPages&emsp;</span>
@@ -81,6 +87,8 @@ else
     private Dictionary<string, string> selectedCollectionForSet = new(); // Selected collection where a set will be added
     private Dictionary<string, string> successMessages = new(); 
     private Dictionary<string, string> errorMessages = new();
+    
+    // Pagination variables
     private int currentPage = 1;
     private int pageSize = 10;
     private int totalPages => sets == null || sets.Count == 0 ? 1 : (int)Math.Ceiling((double)sets.Count / pageSize);
@@ -112,7 +120,7 @@ else
     {
         selectedSet = set;
         
-        // Assert key exists in dictionary
+        // Ensure key exists in dictionary
         if (!dropdownVisibility.ContainsKey(set.SetNum))
         {
             dropdownVisibility[set.SetNum] = false; // Initialize dropdown visibility
@@ -138,6 +146,7 @@ else
 
     private async Task ConfirmAddToCollection()
     {
+        // Validate if a set and a collection are selected
         if (selectedSet == null || !selectedCollectionForSet.ContainsKey(selectedSet.SetNum) || string.IsNullOrEmpty(selectedCollectionForSet[selectedSet.SetNum]))
         {
             errorMessages[selectedSet?.SetNum ?? "unknown"] = "Please select a collection first.";
@@ -145,6 +154,7 @@ else
             return;
         }
         
+        // Ensure dropdown visibility state is initialized
         if (!dropdownVisibility.ContainsKey(selectedSet?.SetNum ?? ""))
         {
             dropdownVisibility[selectedSet?.SetNum ?? ""] = false;
@@ -189,6 +199,7 @@ else
         StateHasChanged(); // Force UI update to reflect changes
     }
     
+    // Move to the next page in pagination if possible
     private void NextPage()
     {
         if (currentPage < totalPages)
@@ -197,6 +208,7 @@ else
         }
     }
 
+    // Move to the previous page in pagination if possible
     private void PreviousPage()
     {
         if (currentPage > 1)

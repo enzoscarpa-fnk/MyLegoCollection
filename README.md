@@ -39,7 +39,7 @@ This is a Blazor WebAssembly application that helps users manage and explore the
 
 2.	Open the project in your IDE (e.g., Visual Studio Code, JetBrains Rider).
 
-3.	Add your Rebrickable API key in the appsettings.json file:
+3.	Create the appsettings.json file in /wwwroot and add your Rebrickable API key:
 
 ```json
   {

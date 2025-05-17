@@ -25,7 +25,7 @@ This is a Blazor WebAssembly application that helps users manage and explore the
 
 ### Prerequisites
 
-- **.NET 6.0+**: The application is built using **.NET 6.0** (or a later version).
+- **.NET 6.0**: The application is built using **.NET 6.0**.
 - **Rebrickable API key**: You will need a Rebrickable API key to interact with the LEGO sets API.
 
 ### Steps to Run the Application Locally
